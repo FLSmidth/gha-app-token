@@ -30,6 +30,11 @@ try {
   const githubApiUrlInput = getInput("github_api_url", { required: true });
   const githubApiUrl = new URL(githubApiUrlInput);
 
+  const repositoriesInput = getInput("repositories");
+  const repositories = repositoriesInput
+    ? (JSON.parse(repositoriesInput) as string[])
+    : undefined;
+
   const installationToken = await fetchInstallationToken({
     appId,
     githubApiUrl,
@@ -38,6 +43,7 @@ try {
     permissions,
     privateKey,
     repo,
+    repositories,
   });
 
   setSecret(installationToken);

@@ -18,6 +18,8 @@ inputs:
   repository:
     description: The full name of the repository for which the token will be requested.
     default: ${{ github.repository }}
+  repositories:
+    description: The JSON-stringified repositories granted to the token (defaults to all the GitHub app repositories, see https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app).
 outputs:
   token:
     description: An installation token for the GitHub App on the requested repository.
