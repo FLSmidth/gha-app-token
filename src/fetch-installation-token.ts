@@ -45,7 +45,7 @@ export const fetchInstallationToken = async ({
       } = await octokit.rest.apps.getRepoInstallation({ owner, repo }));
     } catch (error: unknown) {
       throw new Error(
-        "Could not get repo installation. Is the app installed on this repo?",
+        `Could not get the installation information for appId ${appId}. Is the app installed on repository ${repo}?`,
         { cause: error },
       );
     }
@@ -57,11 +57,20 @@ export const fetchInstallationToken = async ({
         item = item.includes("/") ? item : item.split("/")[1];
         return item;
       });
-      info(
-        `Create token with the ${JSON.stringify(
-          permissions,
-        )} permissions to the repositories ${JSON.stringify(repos)}!`,
-      );
+      if (repositories.length === 0) {
+        info(
+          `Create token with the ${JSON.stringify(
+            permissions,
+          )} permissions and without access to any repositories!`,
+        );
+      } else {
+        info(
+          `Create token with the ${JSON.stringify(
+            permissions,
+          )} permissions to the repositories ${JSON.stringify(repos)}!`,
+        );
+      }
+
       const { data: installation } =
         await octokit.rest.apps.createInstallationAccessToken({
           installation_id: installationId,
@@ -74,11 +83,18 @@ export const fetchInstallationToken = async ({
         item = item.includes("/") ? item : item.split("/")[1];
         return item;
       });
-      info(
-        `Create token with the same permissions as installation ${installationId} for the repositories ${JSON.stringify(
-          repos,
-        )}!`,
-      );
+      if (repositories.length === 0) {
+        info(
+          `Create token with the same permissions as installation ${installationId} and without access to any repositories!`,
+        );
+      } else {
+        info(
+          `Create token with the same permissions as installation ${installationId} for the repositories ${JSON.stringify(
+            repos,
+          )}!`,
+        );
+      }
+
       const { data: installation } =
         await octokit.rest.apps.createInstallationAccessToken({
           installation_id: installationId,
